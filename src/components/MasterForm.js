@@ -25,6 +25,9 @@ class MasterForm extends React.Component {
   prev = () => {
     let currentStep = this.state.currentStep;
     currentStep = currentStep <= 1 ? 1 : currentStep - 1;
+    this.setState({
+      currentStep,
+    });
   };
 
   previousButton() {
@@ -41,7 +44,7 @@ class MasterForm extends React.Component {
 
   nextButton() {
     let currentStep = this.state.currentStep;
-    if (currentStep > 3) {
+    if (currentStep < 3) {
       return (
         <button
           type="button"
@@ -55,16 +58,45 @@ class MasterForm extends React.Component {
     return null;
   }
 
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { email, password, username } = this.state;
+    alert(`Your registration detail: \n
+          Email: ${email} \n
+          Username: ${username} \n
+           Password: ${password}`);
+  };
+
   render() {
+    console.log(this.state.currentStep);
     return (
       <>
         <div className="wizard">
           <h1>React Wizard Form</h1>
           <p>Current Step {this.state.currentStep}</p>
-          <form>
-            <StepOne currentStep={this.state.currentStep} />
-            <StepTwo currentStep={this.state.currentStep} />
-            <StepThree currentStep={this.state.currentStep} />
+          <form onSubmit={this.handleSubmit}>
+            <StepOne
+              currentStep={this.state.currentStep}
+              handleChange={this.handleChange}
+              email={this.state.email}
+            />
+            <StepTwo
+              currentStep={this.state.currentStep}
+              handleChange={this.handleChange}
+              username={this.state.username}
+            />
+            <StepThree
+              currentStep={this.state.currentStep}
+              handleChange={this.handleChange}
+              password={this.state.password}
+            />
             {this.previousButton()}
             {this.nextButton()}
           </form>
